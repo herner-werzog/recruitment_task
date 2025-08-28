@@ -107,3 +107,12 @@ def update_book_status(
         loan_id=row[0],
         borrowed_at=row[1],
     )
+
+@app.get("/health", status_code=status.HTTP_200_OK)
+def healthcheck(conn=DB):
+    """Check if API and database are healthy."""
+    try:
+        conn.execute("SELECT 1")
+    except Exception:
+        raise HTTPException(503, "Database is unavailable")
+    return {"status": "ok"}
